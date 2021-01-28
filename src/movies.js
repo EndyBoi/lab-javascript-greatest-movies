@@ -53,4 +53,44 @@ const orderAlphabetically = (arr) =>
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 
+const turnHoursToMinutes = (moviesArr) => {
+  let moves = moviesArr.map((movie) => {
+    let movieCopy = Object.assign({}, movie)
+    movieCopy.duration = movieCopy.duration
+      .split(" ")
+      .reduce(
+        (t, s) =>
+          (t += s.includes("h")
+            ? parseInt(s.replace(/h/g, "")) * 60
+            : parseInt(s.replace(/min/g, ""))),
+        0
+      )
+    return movieCopy
+  })
+  return moves
+}
+
 // BONUS - Iteration 8: Best yearly rate average - Best yearly rate average
+
+const bestYearAvg = (moviesArr) => {
+  if (moviesArr.length === 0) return null
+
+  const years = Array(...new Set(moviesArr.map((movie) => movie.year)))
+
+  let yearObj = years.reduce(
+    (bestYear, year) => {
+      let thisYear = {
+        year,
+        avg: ratesAverage(moviesArr.filter((m) => m.year == year)),
+      }
+      return bestYear.avg === thisYear.avg
+        ? (bestYear.year < thisYear.year && bestYear) || thisYear
+        : bestYear.avg < thisYear.avg
+        ? thisYear
+        : bestYear
+    },
+    { year: undefined, avg: 0 }
+  )
+
+  return `The best year was ${yearObj.year} with an average rate of ${yearObj.avg}`
+}
